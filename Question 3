@@ -1,0 +1,35 @@
+# Question 3: Fermi Problem and Sensitivity Analysis
+
+Inicio
+  // Import libraries
+  Importar pandas como pd
+  Importar numpy como np
+  Importar sklearn.linear_model como LinearRegression
+
+  // Load preprocessed data
+  Asignar df = pd.read_csv('preprocessed_data.csv')
+
+  // Integrate additional indicators
+  Asignar df['Vehicles_per_Capita'] = ...  // Assume data source or estimation
+  Asignar df['Energy_Mix'] = ...  // Assume data source
+  Asignar df['EV_Adoption_Rate'] = ...  // Assume data source
+
+  // Prepare data for modeling
+  Definir X = df.drop('CO2_Emissions', axis=1)
+  Definir y = df['CO2_Emissions']
+  Instanciar modelo = LinearRegression()
+  Ejecutar modelo.fit(X, y)
+
+  // Simulate 50% EV adoption
+  Copiar df_sim = df.copy()
+  Calcular factor_reduccion = 0.5 * (1 - df['Energy_Mix'])  // Assume reduction based on non-renewable mix
+  Asignar df_sim['CO2_Simulated'] = y * (1 - factor_reduccion)
+  Calcular reducciones = y - df_sim['CO2_Simulated']
+  Identificar paises_significativos = df.loc[reducciones.nlargest(10).index]
+
+  // Save and document
+  Exportar paises_significativos a 'ev_reductions.csv' con to_csv()
+  Con open('analysis_q3.md', 'w') como archivo:
+    Escribir archivo.write('# Findings\nTop Countries for Reduction: {}\n# Assumptions\nReduction factor based on energy mix; limited by data accuracy on EV adoption rates'.format(paises_significativos))
+
+Fin
