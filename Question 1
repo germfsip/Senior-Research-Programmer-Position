@@ -1,0 +1,41 @@
+# Question 1: Comprehensive Data Acquisition and Preprocessing
+
+Inicio
+  // Initialize environment and import necessary libraries
+  Importar pandas como pd
+  Importar numpy como np
+
+  // Define file path for CSV data
+  Asignar ruta_archivo = 'wdicsv.csv'
+
+  // Load CSV data into DataFrame
+  Asignar df = pd.read_csv(ruta_archivo)
+
+  // Validate data structure and extract relevant indicators
+  // Assume CSV contains columns for CO2 emissions, GDP, population, energy consumption, urbanization rate, education level, etc.
+  Verificar existencia de columnas requeridas en df.columns
+  Si no existen columnas clave:
+    Levantar excepción 'Datos insuficientes en el archivo CSV'
+
+  // Preprocessing stage
+  // Handle missing values
+  Aplicar df.dropna(thresh=0.8 * len(df.columns))  // Retain rows with at least 80% non-null data
+  Para cada columna en df.columns:
+    Si np.any(np.isnan(df[columna])) o np.any(np.isinf(df[columna])):
+      Rellenar df[columna] con df[columna].median()
+
+  // Detect and handle outliers
+  Calcular media = df.mean() y desviacion_estandar = df.std()
+  Filtrar df = df[(np.abs(df - media) <= (3 * desviacion_estandar))]  // Remove data beyond 3 standard deviations
+
+  // Generate dataset summary
+  Calcular estadisticas_descriptivas = df.describe()
+  Calcular matriz_correlacion = df.corr()
+  Identificar patrones_anomalias = "Análisis visual pendiente con pd.plotting.scatter_matrix(df)"
+
+  // Save processed data and summary
+  Exportar df a 'preprocessed_data.csv' con df.to_csv()
+  Con open('summary_q1.md', 'w') como archivo:
+    Escribir archivo.write('# Data Summary\n' + estadisticas_descriptivas.to_markdown() + '\n# Correlations\n' + matriz_correlacion.to_markdown() + '\n# Preprocessing Steps\n' + 'Detalles de limpieza de valores faltantes, manejo de valores atípicos, y aseguramiento de consistencia')
+
+Fin
