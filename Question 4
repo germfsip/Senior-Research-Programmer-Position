@@ -1,0 +1,41 @@
+# Question 4: Classification and Policy Implications
+
+Inicio
+  // Import libraries
+  Importar pandas como pd
+  Importar numpy como np
+  Importar sklearn.model_selection como train_test_split
+  Importar sklearn.ensemble como RandomForestClassifier
+  Importar sklearn.metrics como accuracy_score, precision_score, recall_score, f1_score
+
+  // Load data
+  Asignar df = pd.read_csv('preprocessed_data.csv')
+
+  // Define binary target variable
+  Asignar df['Target_Reduction'] = np.where(df['CO2_Emissions'].pct_change() < -0.1, 1, 0)  // Significant reduction >10%
+
+  // Prepare data
+  Definir X = df.drop('Target_Reduction', axis=1)
+  Definir y = df['Target_Reduction']
+  Asignar X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+  // Train classifier
+  Instanciar clasificador = RandomForestClassifier(random_state=42)
+  Ejecutar clasificador.fit(X_train, y_train)
+  Predecir y_pred = clasificador.predict(X_test)
+
+  // Evaluate performance
+  Calcular accuracy = accuracy_score(y_test, y_pred)
+  Calcular precision = precision_score(y_test, y_pred)
+  Calcular recall = recall_score(y_test, y_pred)
+  Calcular f1 = f1_score(y_test, y_pred)
+
+  // Analyze key features
+  Asignar importancias = clasificador.feature_importances_
+  Identificar caracteristicas_clave = X.columns[np.argsort(importancias)[-5:]]  // Top 5 features
+
+  // Document results
+  Con open('analysis_q4.md', 'w') como archivo:
+    Escribir archivo.write('# Classifier Performance\nAccuracy: {:.2f}\nPrecision: {:.2f}\nRecall: {:.2f}\nF1: {:.2f}\n# Key Features\n{}\n# Policy Implications\nInvest in regions with high {} and {} indicators'.format(accuracy, precision, recall, f1, caracteristicas_clave, caracteristicas_clave[0], caracteristicas_clave[1]))
+
+Fin
