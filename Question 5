@@ -1,0 +1,35 @@
+# Question 5: Strategic Analysis and Model Application
+
+Inicio
+  // Import libraries
+  Importar pandas como pd
+  Importar numpy como np
+  Importar sklearn.linear_model como LinearRegression
+  Importar sklearn.ensemble como RandomForestClassifier
+
+  // Load data
+  Asignar df = pd.read_csv('preprocessed_data.csv')
+
+  // Assume models from previous questions
+  Instanciar modelo_reg = LinearRegression()
+  Instanciar clasificador = RandomForestClassifier()
+
+  // Simulate renewable energy investment
+  Copiar df_sim = df.copy()
+  Asignar df_sim['Renewable_Investment'] = df_sim['GDP'] * 0.2  // 20% of GDP
+  Predecir co2_pred = modelo_reg.predict(df_sim.drop('CO2_Emissions', axis=1))
+  Calcular reduccion = df['CO2_Emissions'] - co2_pred
+  Asignar probabilidad_reduccion = clasificador.predict_proba(df_sim)[:, 1]
+
+  // Prioritize investment types
+  Definir prioridades = diccionario:
+    'Solar' : np.corrcoef(df['Solar'], reduccion)[0,1]
+    'Wind' : np.corrcoef(df['Wind'], reduccion)[0,1]
+    'Hydro' : np.corrcoef(df['Hydro'], reduccion)[0,1]
+  Ordenar ranked_priorities = sorted(prioridades.items(), key=lambda x: x[1], reverse=True)
+
+  // Document strategic recommendations
+  Con open('recommendation_q5.md', 'w') como archivo:
+    Escribir archivo.write('# Probability of Reduction\nMean Probability: {:.2f}\n# Investment Priorities\n{}\n# Expected Outcomes\nAnticipated reduction based on correlation with {}'.format(probabilidad_reduccion.mean(), ranked_priorities, ranked_priorities[0][0]))
+
+Fin
